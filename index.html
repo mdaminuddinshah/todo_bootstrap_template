@@ -11,12 +11,12 @@
     <!-- navigation -->
     <div class="container-fluid bg-light py-2">
       <nav class="navbar bg-body-tertiary">
-        <div class="container">
-          <a class="navbar-brand" href="./index.html">Todo List</a>
-          <div class="d-flex" >
-            <a class="navbar-brand" href="./sign-in.html">Login</a>
-            <a class="navbar-brand" href="./register.html">Register</a>
-          </div>
+        <div class="container d-flex justify-content-center">
+          <!-- <a class="navbar-brand" href="./index.html">Todo List</a> -->
+          
+            
+            <a class="navbar-brand" href="./logout.html" onclick="deleteToken()">Logout</a>
+          
         </div>
       </nav>
     </div>
@@ -33,34 +33,11 @@
             <label for="todo">New Todo</label>
           </div>
       
-          <button class="btn btn-primary w-100 py-2" type="submit">Add</button>
+          <div class="btn btn-primary w-100 py-2" onclick="addButtonValue()">Add</div>
         </form>
 
-        <div class="m-3">
-          <div class="pt-1 d-flex justify-content-between">
-            Belajar HTML
-            <div class="d-flex" >
-              <button class="btn btn-success me-1"><i class="bi bi-check"></i></button>
-              <button class='btn btn-primary me-1' data-bs-toggle="modal" data-bs-target="#editTodo" ><i class="bi bi-pencil"></i></button>
-              <button class='btn btn-danger'><i class="bi bi-trash"></i></button>
-            </div>
-          </div>
-          <div class="pt-1 d-flex justify-content-between">
-            Belajar CSS
-            <div class="d-flex" >
-              <button class="btn btn-success me-1"><i class="bi bi-check"></i></button>
-              <button class='btn btn-primary me-1' data-bs-toggle="modal" data-bs-target="#editTodo" ><i class="bi bi-pencil"></i></button>
-              <button class='btn btn-danger'><i class="bi bi-trash"></i></button>
-            </div>
-          </div>
-          <div class="pt-1 d-flex justify-content-between">
-            Belajar JavaScript
-            <div class="d-flex" >
-              <button class="btn btn-warning me-1"><i class="bi bi-x"></i></button>
-              <button class='btn btn-primary me-1' data-bs-toggle="modal" data-bs-target="#editTodo" ><i class="bi bi-pencil"></i></button>
-              <button class='btn btn-danger'><i class="bi bi-trash"></i></button>
-            </div>  
-          </div>
+        <div class="m-3 d-flex flex-column" id="todoList">
+         
         </div>
 
       </div>
@@ -76,14 +53,22 @@
           </div>
           <div class="modal-body">
             <div class="form-floating pb-2">
-              <input type="text" class="form-control" id="todo" placeholder="to do list">
+              <input type="text" class="form-control" id="sendInput" placeholder="to do list">
               <label for="todo">Edit Todo</label>
             </div>
-            <button type="button" class="btn btn-success">Mark as completed</button>
+            <div class="dropdown-center">
+              <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Centered dropdown
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#" onclick="handleDropdownClick(0)">0</a></li>
+                <li><a class="dropdown-item" href="#" onclick="handleDropdownClick(1)">1</a></li>
+              </ul>
+            </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
+            <div type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="closeModal">Close</div>
+            <div class="btn btn-primary" onclick="saveChanges()">Save changes</div>
           </div>
         </div>
       </div>
@@ -93,5 +78,147 @@
       2024
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script>
+
+
+
+      // ASSIGNMENT 8 = DELETE BUTTON
+      function deleteBtn(id){
+
+        const details = id
+        console.log(details)
+
+        const url = `https://api.kelasprogramming.com/todo/${details}`;
+
+        fetch(url, {
+          method: "DELETE",
+          headers: {
+            "Authorization": `Bearer ${localStorage.getItem('tokenId')}`
+          }
+        })
+        .then(res => res.json())
+        .then(data => {
+          fetchData()
+          console.log(data)
+        })
+        .catch(err => console.log(err))
+      }
+
+      // ASSIGNMENT 8 = MARKS AS COMPLETED
+      let completeds = ''
+      function handleDropdownClick(nilai) {
+        console.log(nilai);
+        completeds = nilai    
+  }
+
+      // ASSIGNMENT 8 = DELETE TOKEN
+      function deleteToken(){
+        localStorage.setItem('tokenId', '')
+        localStorage.setItem('refreshToken', '')
+  }
+    
+
+
+
+
+
+
+
+
+      const url = 'https://api.kelasprogramming.com/todo';
+
+      const getToken = localStorage.getItem('tokenId')
+      console.log(`token ialah ${getToken}`)
+
+      // fetch data
+      function fetchData(){
+        fetch(url, {
+        headers: {"Authorization":"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2FwaS5rZWxhc3Byb2dyYW1taW5nLmNvbS50ZXN0Iiwic3ViIjoiNTEzYjBjZDQtOTU0NC01NGE1LWI0NDEtMTI3ZGE0YTczZmE2IiwiaWF0IjoxNzEwMDcwMzIzLCJleHAiOjE3MTAyNDMxMjMsIm5hbWUiOiJuYW1kb3NhbiJ9.xBGaLamYhz0n3m9vEBMHHhim62qXATKqfrY3tzbgpFg"}
+      })
+        .then(res => res.json())
+        .then(data => {
+          const todoList = data.entry.map((todo => (
+            `<div class="d-flex flex-column">
+            <div class="pt-1 d-flex justify-content-between">
+              ${todo.details}
+              <div class="d-flex">
+                <button class="btn btn-${todo.completed == 1 ? 'success' : 'warning'} me-1">
+                  ${todo.completed == 1 ? '<i class="bi bi-check"></i>' : '<i class="bi bi-x"></i>'}
+                </button>
+                <button onclick="whatId(${todo.id})" class="btn btn-primary me-1" data-bs-toggle="modal" data-bs-target="#editTodo"><i class="bi bi-pencil"></i></button>
+                <button onclick="deleteBtn(${todo.id})" class="btn btn-danger"><i class="bi bi-trash"></i></button>
+              </div>
+            </div
+            </div>`
+
+          )))
+          document.getElementById('todoList').innerHTML = todoList.join('')
+        }) 
+
+        .catch(err => console.log(err))
+      }
+      
+
+
+    // what id function
+    let whatIds = ''
+
+    function whatId(id){
+      console.log(id)
+      whatIds = id
+    }
+
+    // save changes function
+    function saveChanges(){ 
+      const sendInput = document.getElementById('sendInput').value;
+      console.log('value ' + sendInput)
+      
+      fetch(`https://api.kelasprogramming.com/todo/${whatIds}`, {
+        method: "PUT",
+        headers: {
+          "Content-type": "application/json",
+          "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2FwaS5rZWxhc3Byb2dyYW1taW5nLmNvbS50ZXN0Iiwic3ViIjoiNTEzYjBjZDQtOTU0NC01NGE1LWI0NDEtMTI3ZGE0YTczZmE2IiwiaWF0IjoxNzEwMTU2MDYzLCJleHAiOjE3MTAzMjg4NjMsIm5hbWUiOiJuYW1kb3NhbiJ9.sn5RZWmIvnp-FeD2Tnn3ZImcs0TF-AZyLrzzub_y8es"  
+        },
+        body: JSON.stringify({
+          "details": sendInput,
+          "completed": completeds
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        console.log(data)
+        fetchData()
+        document.getElementById('sendInput').value = ''
+        document.getElementById('closeModal').click()
+      })
+      .catch(err => console.log(err))
+    }
+
+    // add button
+    function addButtonValue(){
+      const valueInput = document.getElementById('todo').value;
+      console.log('value ' + valueInput)
+      
+      fetch('https://api.kelasprogramming.com/todo', {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+          "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2FwaS5rZWxhc3Byb2dyYW1taW5nLmNvbS50ZXN0Iiwic3ViIjoiNTEzYjBjZDQtOTU0NC01NGE1LWI0NDEtMTI3ZGE0YTczZmE2IiwiaWF0IjoxNzEwMDcwMzIzLCJleHAiOjE3MTAyNDMxMjMsIm5hbWUiOiJuYW1kb3NhbiJ9.xBGaLamYhz0n3m9vEBMHHhim62qXATKqfrY3tzbgpFg"   
+        },
+        body: JSON.stringify({
+          "details": valueInput
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        console.log(data)
+        fetchData()
+        document.getElementById('todo').value = ''
+      })
+      .catch(err => console.log(err))
+    } 
+
+    </script>
+  
   </body>
 </html>
